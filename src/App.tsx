@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Sidebar } from './components/Sidebar';
+import { PropertiesPanel } from './components/PropertiesPanel';
 import { CanvasArea } from './components/CanvasArea';
 import { PlaygroundElement } from './types';
 import { Map, Download, Save, Upload } from 'lucide-react';
@@ -11,6 +12,8 @@ export default function App() {
   const [landDimensions, setLandDimensions] = useState({ width: 300, height: 200 });
   const [scale, setScale] = useState(4); // 1 ft = 4 px default
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [leftPanelOpen, setLeftPanelOpen] = useState(true);
+  const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const stageRef = useRef<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -128,13 +131,12 @@ export default function App() {
     <div className="flex h-screen bg-gray-100 overflow-hidden font-sans text-gray-900">
       <Sidebar
         addElement={addElement}
-        selectedElement={elements.find(el => el.id === selectedId)}
-        updateElement={updateElement}
-        deleteElement={deleteElement}
         landDimensions={landDimensions}
         setLandDimensions={setLandDimensions}
         scale={scale}
         setScale={setScale}
+        isOpen={leftPanelOpen}
+        onToggle={() => setLeftPanelOpen(!leftPanelOpen)}
       />
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm z-10">
@@ -230,6 +232,15 @@ export default function App() {
           </div>
         )}
       </div>
+      <PropertiesPanel
+        selectedElement={elements.find(el => el.id === selectedId)}
+        updateElement={updateElement}
+        deleteElement={deleteElement}
+        duplicateElement={duplicateElement}
+        reorderElement={reorderElement}
+        isOpen={rightPanelOpen}
+        onToggle={() => setRightPanelOpen(!rightPanelOpen)}
+      />
     </div>
   );
 }
